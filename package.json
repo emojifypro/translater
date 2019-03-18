@@ -2,18 +2,19 @@
   "name": "emojifypro-translator",
   "version": "0.0.1",
   "description": "Translate English into Emoji",
-  "main": "src/index.js",
+  "main": "src/translator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "emoji": "node build.js emojiList"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emojifypro/translator.git"
   },
-  "author": "Jake Booher",
+  "author": "Audentio, LLC",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/emojifypro/translator/issues"
   },
-  "homepage": "https://github.com/emojifypro/translator#readme"
+  "homepage": "https://github.com/emojifypro/translator#readme",
+  "dependencies": {}
 }
