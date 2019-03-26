@@ -99,41 +99,50 @@
 
     const renderButton = () => {
         const disabled = getCookie('th_emojifyProDisabled') === '1';
-        const ele = document.createElement('BUTTON');
-        ele.id = 'th_emojifyProTrigger';
-        ele.style = 'font-size: 3rem; background-color: transparent; border: none; padding: 0; margin-top: 4px;';
-        const wrapper = document.createElement('DIV');
+        let ele = document.getElementById("th_emojifyProTrigger");
+        if (!ele) {
+            const ele = document.createElement('BUTTON');
+            ele.id = 'th_emojifyProTrigger';
+            ele.style = 'font-size: 3rem; background-color: transparent; border: none; padding: 0; margin-top: 4px;';
+            const wrapper = document.createElement('DIV');
 
-        wrapper.id = 'th_emojifyProWrapper';
-        wrapper.style = 'position: fixed; bottom: 24px; left: 24px; z-index: 100000; border-radius: 100px; padding: 1rem; background-color: #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); transition: opacity 0.2s; opacity: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; width: 7rem; height: 7rem; cursor: pointer;';
-        wrapper.appendChild(ele);
-        document.body.appendChild(wrapper);
+            wrapper.id = 'th_emojifyProWrapper';
+            wrapper.style = 'position: fixed; bottom: 24px; left: 24px; z-index: 100000; border-radius: 100px; padding: 1rem; background-color: #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); transition: opacity 0.2s; opacity: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; width: 7rem; height: 7rem; cursor: pointer;';
+            wrapper.appendChild(ele);
+            document.body.appendChild(wrapper);
 
-        const toggle = (e) => {
-            e.preventDefault();
-            setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
-            window.location.reload();
-        };
+            const toggle = (e) => {
+                e.preventDefault();
+                setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
+                window.location.reload();
+            };
 
+            wrapper.onclick = toggle;
+
+            window.addEventListener('scroll', () => {
+                if (eleOpacity !== 1) {
+                    wrapper.style.opacity = 1;
+                    eleOpacity = 1;
+                    ele.style.pointerEvents = 'all';
+                }
+
+                if (scrollTimeout !== null) {
+                    clearTimeout(scrollTimeout);
+                }
+
+                scrollTimeout = makeTimeout();
+            });
+
+            ele.title = disabled ? 'Enable Emojify Pro' : 'Disable Emojify Pro';
+            ele.innerHTML = disabled ? '✅' : '❌';
+        }
+        
         ele.onclick = toggle;
-        wrapper.onclick = toggle;
-
-        window.addEventListener('scroll', () => {
-            if (eleOpacity !== 1) {
-                wrapper.style.opacity = 1;
-                eleOpacity = 1;
-                ele.style.pointerEvents = 'all';
-            }
-
-            if (scrollTimeout !== null) {
-                clearTimeout(scrollTimeout);
-            }
-
-            scrollTimeout = makeTimeout();
-        });
-
-        ele.title = disabled ? 'Enable Emojify Pro' : 'Disable Emojify Pro';
-        ele.innerHTML = disabled ? '✅' : '❌';
+        if (disabled) {
+            ele.className += ' disabled';
+        } else {
+            ele.className += 'enabled'
+        }
     }
 
     const run = (selector = 'body') => {

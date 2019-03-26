@@ -126,40 +126,52 @@
 
     var renderButton = function renderButton() {
         var disabled = getCookie("th_emojifyProDisabled") === "1";
-        var ele = document.createElement("BUTTON");
-        ele.id = "th_emojifyProTrigger";
-        ele.style =
-            "font-size: 3rem; background-color: transparent; border: none; padding: 0; margin-top: 4px;";
-        var wrapper = document.createElement("DIV");
-        wrapper.id = "th_emojifyProWrapper";
-        wrapper.style =
-            "position: fixed; bottom: 24px; left: 24px; z-index: 100000; border-radius: 100px; padding: 1rem; background-color: #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); transition: opacity 0.2s; opacity: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; width: 7rem; height: 7rem; cursor: pointer;";
-        wrapper.appendChild(ele);
-        document.body.appendChild(wrapper);
+        var ele = document.getElementById("th_emojifyProTrigger");
 
-        var toggle = function toggle(e) {
-            e.preventDefault();
-            setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
-            window.location.reload();
-        };
+        if (!ele) {
+            var _ele = document.createElement("BUTTON");
+
+            _ele.id = "th_emojifyProTrigger";
+            _ele.style =
+                "font-size: 3rem; background-color: transparent; border: none; padding: 0; margin-top: 4px;";
+            var wrapper = document.createElement("DIV");
+            wrapper.id = "th_emojifyProWrapper";
+            wrapper.style =
+                "position: fixed; bottom: 24px; left: 24px; z-index: 100000; border-radius: 100px; padding: 1rem; background-color: #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); transition: opacity 0.2s; opacity: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; width: 7rem; height: 7rem; cursor: pointer;";
+            wrapper.appendChild(_ele);
+            document.body.appendChild(wrapper);
+
+            var _toggle = function _toggle(e) {
+                e.preventDefault();
+                setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
+                window.location.reload();
+            };
+
+            wrapper.onclick = _toggle;
+            window.addEventListener("scroll", function () {
+                if (eleOpacity !== 1) {
+                    wrapper.style.opacity = 1;
+                    eleOpacity = 1;
+                    _ele.style.pointerEvents = "all";
+                }
+
+                if (scrollTimeout !== null) {
+                    clearTimeout(scrollTimeout);
+                }
+
+                scrollTimeout = makeTimeout();
+            });
+            _ele.title = disabled ? "Enable Emojify Pro" : "Disable Emojify Pro";
+            _ele.innerHTML = disabled ? "✅" : "❌";
+        }
 
         ele.onclick = toggle;
-        wrapper.onclick = toggle;
-        window.addEventListener("scroll", function () {
-            if (eleOpacity !== 1) {
-                wrapper.style.opacity = 1;
-                eleOpacity = 1;
-                ele.style.pointerEvents = "all";
-            }
 
-            if (scrollTimeout !== null) {
-                clearTimeout(scrollTimeout);
-            }
-
-            scrollTimeout = makeTimeout();
-        });
-        ele.title = disabled ? "Enable Emojify Pro" : "Disable Emojify Pro";
-        ele.innerHTML = disabled ? "✅" : "❌";
+        if (disabled) {
+            ele.className += " disabled";
+        } else {
+            ele.className += "enabled";
+        }
     };
 
     var run = function run() {
