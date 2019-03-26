@@ -20,7 +20,7 @@
 
     for (var _i = 0, _len = fullDictionary.length; _i < _len; _i += 2) {
         regexDictionary.push([
-            RegExp("\\b" + fullDictionary[_i] + "(s|ed|d|ing|'s)?\\b", "igm"),
+            RegExp('\\b(?<!")' + fullDictionary[_i] + "(s|ed|d|ing|'s)?\\b", "igm"),
             fullDictionary[_i + 1]
         ]);
     }
@@ -192,12 +192,25 @@
                 var changes = walkTree(item);
                 changes.forEach(function (change) {
                     var newContent = change[2];
+                    var enableHTML =
+                        change[1] === "nodeValue" &&
+                        !change[0].childNodes.length &&
+                        change[0].nodeName === "#text";
                     regexDictionary.forEach(function (regex) {
-                        newContent = newContent.replace(regex[0], regex[1]);
+                        newContent = newContent.replace(
+                            regex[0],
+                            enableHTML
+                                ? '<span title="$&">'.concat(regex[1], "</span>")
+                                : regex[1]
+                        );
                     });
 
                     if (change[2] !== newContent) {
-                        change[0][change[1]] = newContent;
+                        if (enableHTML) {
+                            change[0].parentNode.innerHTML = newContent;
+                        } else {
+                            change[0][change[1]] = newContent;
+                        }
                     }
                 });
             });
