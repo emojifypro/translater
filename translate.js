@@ -99,6 +99,13 @@
 
     const renderButton = () => {
         const disabled = getCookie('th_emojifyProDisabled') === '1';
+
+        const toggle = (e) => {
+            e.preventDefault();
+            setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
+            window.location.reload();
+        };
+
         let ele = document.getElementById("th_emojifyProTrigger");
         if (!ele) {
             const ele = document.createElement('BUTTON');
@@ -110,12 +117,6 @@
             wrapper.style = 'position: fixed; bottom: 24px; left: 24px; z-index: 100000; border-radius: 100px; padding: 1rem; background-color: #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); transition: opacity 0.2s; opacity: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; width: 7rem; height: 7rem; cursor: pointer;';
             wrapper.appendChild(ele);
             document.body.appendChild(wrapper);
-
-            const toggle = (e) => {
-                e.preventDefault();
-                setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
-                window.location.reload();
-            };
 
             wrapper.onclick = toggle;
 

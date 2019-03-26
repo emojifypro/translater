@@ -126,6 +126,13 @@
 
     var renderButton = function renderButton() {
         var disabled = getCookie("th_emojifyProDisabled") === "1";
+
+        var toggle = function toggle(e) {
+            e.preventDefault();
+            setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
+            window.location.reload();
+        };
+
         var ele = document.getElementById("th_emojifyProTrigger");
 
         if (!ele) {
@@ -140,14 +147,7 @@
                 "position: fixed; bottom: 24px; left: 24px; z-index: 100000; border-radius: 100px; padding: 1rem; background-color: #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); transition: opacity 0.2s; opacity: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; width: 7rem; height: 7rem; cursor: pointer;";
             wrapper.appendChild(_ele);
             document.body.appendChild(wrapper);
-
-            var _toggle = function _toggle(e) {
-                e.preventDefault();
-                setCookie("th_emojifyProDisabled", disabled ? "0" : "1");
-                window.location.reload();
-            };
-
-            wrapper.onclick = _toggle;
+            wrapper.onclick = toggle;
             window.addEventListener("scroll", function () {
                 if (eleOpacity !== 1) {
                     wrapper.style.opacity = 1;
