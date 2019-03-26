@@ -44,10 +44,14 @@
             arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
         var classAllowed = true;
 
-        if (window.th_emojifyProSkip && window.th_emojifyProSkip.length) {
+        if (
+            window.th_emojifyProSkip &&
+            window.th_emojifyProSkip.length &&
+            node.className
+        ) {
             var splitClasses = node.className.split(" ");
             window.th_emojifyProSkip.forEach(function (skipClass) {
-                if (splitClasses.indexOf(skipClass) !== -1) {
+                if (skipClass.length && splitClasses.indexOf(skipClass) !== -1) {
                     classAllowed = false;
                 }
             });
@@ -171,17 +175,6 @@
             style.innerText =
                 ".emojify_emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em; }";
             document.body.appendChild(style);
-
-            if (typeof window.twemoji === "undefined") {
-                document.write(
-                    "<scr" +
-                    "ipt src='//twemoji.maxcdn.com/2/twemoji.min.js?11.3'></scr" +
-                    "ipt><scr" +
-                    "ipt>twemoji.parse(document.body, { folder: 'svg', ext: '.svg', className: 'emojify_emoji' })</scr" +
-                    "ipt>"
-                );
-            }
-
             var items = document.querySelectorAll(selector);
             items.forEach(function (item) {
                 var changes = walkTree(item);
@@ -196,6 +189,16 @@
                     }
                 });
             });
+
+            if (typeof window.twemoji === "undefined") {
+                document.write(
+                    "<scr" +
+                    "ipt src='//twemoji.maxcdn.com/2/twemoji.min.js?11.3'></scr" +
+                    "ipt><scr" +
+                    "ipt>twemoji.parse(document.body, { folder: 'svg', ext: '.svg', className: 'emojify_emoji' })</scr" +
+                    "ipt>"
+                );
+            }
         }
     };
 
