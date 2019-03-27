@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+    "name": "Emojify Pro",
+    "version": "0.1",
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "translate-transpiled.min.js"
+            ]
+        }
+    ]
+}
