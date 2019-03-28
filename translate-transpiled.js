@@ -21,7 +21,10 @@
 
     for (var _i = 0, _len = fullDictionary.length; _i < _len; _i += 2) {
         regexDictionary.push([
-            RegExp("\\b(?<!\\()" + fullDictionary[_i] + "(s|ed|d|ing|'s)?\\b", "igm"),
+            RegExp(
+                '\\b(?<!\\(|")' + fullDictionary[_i] + "(s|ed|d|ing|'s)?\\b",
+                "igm"
+            ),
             fullDictionary[_i + 1],
             fullDictionary[_i]
         ]);
@@ -263,6 +266,6 @@
     };
 
     if (!window.th_emojifyProEnabled) {
-        run();
+        run(window.th_emojifyProSelector || "body");
     }
 })();

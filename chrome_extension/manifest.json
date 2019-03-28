@@ -1,15 +1,19 @@
 {
     "manifest_version": 2,
     "name": "Emojify Pro",
-    "version": "0.1",
+    "description": "Embrace the future of communication",
+    "version": "1.0",
     "content_scripts": [
         {
             "matches": [
                 "<all_urls>"
             ],
             "js": [
-                "translate-transpiled.min.js"
+                "translate-extension.js"
             ]
         }
+    ],
+    "permissions": [
+        "activeTab"
     ]
 }
