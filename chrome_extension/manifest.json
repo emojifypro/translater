@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Emojify Pro",
     "description": "Embrace the future of communication",
-    "version": "1.0",
+    "version": "1.1",
     "content_scripts": [
         {
             "matches": [

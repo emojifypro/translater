@@ -21,10 +21,7 @@
 
     for (var _i = 0, _len = fullDictionary.length; _i < _len; _i += 2) {
         regexDictionary.push([
-            RegExp(
-                '\\b(?<!\\(|")' + fullDictionary[_i] + "(s|ed|d|ing|'s)?\\b",
-                "igm"
-            ),
+            RegExp("\\b" + fullDictionary[_i] + "(s|ed|d|ing|'s)?\\b", "igm"),
             fullDictionary[_i + 1],
             fullDictionary[_i]
         ]);
@@ -199,29 +196,48 @@
                     var newContent = change[2];
 
                     if (change[0]) {
+                        var replacements = {}; // prevent multiple replacements
+
                         var enableHTML =
                             change[1] === "nodeValue" &&
                             !change[0].childNodes.length &&
                             change[0].nodeName === "#text";
                         regexDictionary.forEach(function (regex) {
                             if (window.th_emojifyProTraining === false) {
-                                newContent = newContent.replace(
-                                    regex[0],
-                                    enableHTML
-                                        ? '<span title="$&">'.concat(regex[1], "</span>")
-                                        : regex[1]
-                                );
+                                newContent = newContent.replace(regex[0], function (match) {
+                                    var replaceKey = "~";
+                                    Object.keys(replacements).forEach(function () {
+                                        replaceKey += "~";
+                                    });
+                                    replaceKey = "$$__".concat(replaceKey, "__$$");
+                                    replacements[replaceKey] = enableHTML
+                                        ? '<span title="'
+                                            .concat(match, '">')
+                                            .concat(regex[1], "</span>")
+                                        : regex[1];
+                                    return replaceKey;
+                                });
                             } else {
-                                newContent = newContent.replace(
-                                    regex[0],
-                                    enableHTML && regex[2].length > 1
-                                        ? "".concat(regex[1], "($&)")
-                                        : regex[1]
-                                );
+                                newContent = newContent.replace(regex[0], function (match) {
+                                    var replaceKey = "~";
+                                    Object.keys(replacements).forEach(function () {
+                                        replaceKey += "~";
+                                    });
+                                    replaceKey = "$$__".concat(replaceKey, "__$$");
+                                    replacements[replaceKey] =
+                                        enableHTML && regex[2].length > 1
+                                            ? "".concat(regex[1], "(").concat(match, ")")
+                                            : regex[1];
+                                    return replaceKey;
+                                });
                             }
                         });
 
                         if (change[2] !== newContent) {
+                            Object.keys(replacements).forEach(function (key) {
+                                newContent = newContent.split(key).join(replacements[key]);
+                            });
+
                             if (enableHTML && change[0].parentNode) {
                                 change[0].parentNode.innerHTML = newContent;
                             } else {
