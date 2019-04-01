@@ -163,13 +163,19 @@
                     let newContent = change[2];
                     if (change[0]) {
                         const replacements = {}; // prevent multiple replacements
-                        const enableHTML = change[1] === "nodeValue" && !change[0].childNodes.length && change[0].nodeName === "#text";
+                        const enableHTML =
+                            change[1] === "nodeValue" &&
+                            !change[0].childNodes.length &&
+                            change[0].nodeName === "#text" &&
+                            change[0].parentNode &&
+                            change[0].parentNode.childNodes &&
+                            change[0].parentNode.childNodes.length === 1;
                         regexDictionary.forEach(regex => {
                             if (window.th_emojifyProTraining === false) {
-                                newContent = newContent.replace(regex[0], (match) => {
-                                    let replaceKey = '~';
+                                newContent = newContent.replace(regex[0], match => {
+                                    let replaceKey = "~";
                                     Object.keys(replacements).forEach(() => {
-                                        replaceKey += '~';
+                                        replaceKey += "~";
                                     });
 
                                     replaceKey = `$$__${replaceKey}__$$`;
@@ -178,14 +184,14 @@
                                     return replaceKey;
                                 });
                             } else {
-                                newContent = newContent.replace(regex[0], (match) => {
-                                    let replaceKey = '~';
+                                newContent = newContent.replace(regex[0], match => {
+                                    let replaceKey = "~";
                                     Object.keys(replacements).forEach(() => {
-                                        replaceKey += '~';
+                                        replaceKey += "~";
                                     });
 
                                     replaceKey = `$$__${replaceKey}__$$`;
-                                    replacements[replaceKey] = enableHTML && regex[2].length > 1 ? `${regex[1]}(${match})` : regex[1];
+                                    replacements[replaceKey] = regex[2].length > 1 ? `${regex[1]}(${match})` : regex[1];
 
                                     return replaceKey;
                                 });
@@ -195,7 +201,7 @@
                         if (change[2] !== newContent) {
                             Object.keys(replacements).forEach(key => {
                                 newContent = newContent.split(key).join(replacements[key]);
-                            })
+                            });
 
                             if (enableHTML && change[0].parentNode) {
                                 change[0].parentNode.innerHTML = newContent;
@@ -228,6 +234,6 @@
     };
 
     if (!window.th_emojifyProEnabled) {
-        run(window.th_emojifyProSelector || 'body');
+        run(window.th_emojifyProSelector || "body");
     }
 })();

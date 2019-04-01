@@ -201,7 +201,10 @@
                         var enableHTML =
                             change[1] === "nodeValue" &&
                             !change[0].childNodes.length &&
-                            change[0].nodeName === "#text";
+                            change[0].nodeName === "#text" &&
+                            change[0].parentNode &&
+                            change[0].parentNode.childNodes &&
+                            change[0].parentNode.childNodes.length === 1;
                         regexDictionary.forEach(function (regex) {
                             if (window.th_emojifyProTraining === false) {
                                 newContent = newContent.replace(regex[0], function (match) {
@@ -225,7 +228,7 @@
                                     });
                                     replaceKey = "$$__".concat(replaceKey, "__$$");
                                     replacements[replaceKey] =
-                                        enableHTML && regex[2].length > 1
+                                        regex[2].length > 1
                                             ? "".concat(regex[1], "(").concat(match, ")")
                                             : regex[1];
                                     return replaceKey;
